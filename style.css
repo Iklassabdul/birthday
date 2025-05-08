@@ -11,7 +11,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   text-align: center;
   overflow: hidden;
   position: relative;
@@ -59,6 +59,7 @@ h1 {
   margin-bottom: 25px;
   color: #d6336c;
   font-family: 'Playfair Display', serif;
+  transition: opacity 0.5s ease;
 }
 
 #countdown {
@@ -208,4 +209,46 @@ h1 {
 #phrase-text {
   font-size: 1.1rem;
   color: #333;
+}
+
+/* Responsive Fixes */
+@media (max-width: 600px) {
+  .container {
+    padding: 20px;
+  }
+
+  #countdown {
+    gap: 8px;
+  }
+
+  #countdown div {
+    padding: 12px;
+    min-width: 50px;
+  }
+
+  h1 {
+    font-size: 1.2rem;
+  }
+
+  .gift-heading {
+    font-size: 1rem;
+  }
+
+  .play-btn {
+    padding: 12px;
+  }
+
+  .progress-container {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  #current-time, #duration {
+    font-size: 0.8rem;
+  }
+
+  #welcome-message {
+    font-size: 1rem;
+    padding: 20px;
+  }
 }
