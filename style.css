@@ -1,0 +1,267 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Pacifico&display=swap');
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow-y: auto;
+  text-align: center;
+}
+
+.container {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  max-width: 750px;
+  width: 95%;
+}
+
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 25px;
+  color: #d6336c;
+}
+
+/* Cake and animated glowing flame */
+.cake-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 30px;
+}
+
+.cake {
+  width: 150px;
+  height: auto;
+}
+
+.flame {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 20px;
+  background: radial-gradient(ellipse at center, #fff176 0%, #ff9800 60%, transparent 100%);
+  border-radius: 50%;
+  animation: flicker 1s infinite ease-in-out;
+  opacity: 0.95;
+  box-shadow:
+    0 0 15px #ffb74d,
+    0 0 25px #ff9800,
+    0 0 35px #ff5722;
+}
+
+@keyframes flicker {
+  0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.95; }
+  50% { transform: translateX(-50%) scale(1.1); opacity: 1; }
+  75% { transform: translateX(-50%) scale(0.95); opacity: 0.85; }
+}
+
+/* Countdown */
+#countdown {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+#countdown div {
+  background: #fff0f3;
+  padding: 20px;
+  border-radius: 10px;
+  flex: 1;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+}
+
+#countdown span {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #ff4d6d;
+}
+
+#countdown small {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+/* Button group */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+/* Buttons */
+button {
+  padding: 12px 20px;
+  background-color: #ff4d6d;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 25px;
+  box-shadow: 0 0 10px #ff4d6d;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+  font-size: 1rem;
+}
+
+button:hover {
+  transform: scale(1.05);
+  background-color: #e63956;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Book Layout */
+.book {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 30px;
+  height: 230px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+  user-select: none;
+  transform-origin: center;
+  transform: scale(0.95);
+  opacity: 0;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.book.show {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.page {
+  width: 48%;
+  background-color: #fffefc;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    #fffefc,
+    #fffefc 23px,
+    rgba(0, 0, 0, 0.08) 24px
+  );
+  background-size: 100% 25px;
+  font-family: 'Pacifico', cursive;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 20px 0 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.left-page {
+  border-right: 1px solid #ccc;
+}
+
+.right-page {
+  border-left: none;
+}
+
+.quote-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  padding: 20px;
+}
+
+.quote-text {
+  font-size: 1.3rem;
+  color: #3e2f1c;
+  margin-bottom: 20px;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+.signature {
+  font-size: 1.1rem;
+  color: #5a4734;
+  text-align: right;
+}
+
+.page-number {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  font-family: 'Poppins', sans-serif;
+  color: #aaa;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+  height: 14px;
+  background: #fffefc;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+}
+
+.timestamp {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.75rem;
+  color: #999;
+  text-align: right;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+}
+
+/* Swipe Arrow Animation */
+.swipe-arrow {
+  width: 4%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+  bottom: 25px;
+  font-size: 20px;
+  color: #aaa;
+  animation: arrowSwipe 1.2s ease-in-out infinite;
+  z-index: 2;
+  pointer-events: none;
+}
+
+@keyframes arrowSwipe {
+  0%   { transform: translateX(-5px); }
+  50%  { transform: translateX(5px); }
+  100% { transform: translateX(-5px); }
+}
+
+/* Stitched spine look */
+.spine {
+  width: 4px;
+  background: repeating-linear-gradient(
+    to bottom,
+    #999,
+    #999 4px,
+    transparent 4px,
+    transparent 8px
+  );
+  margin: 0 6px;
+  opacity: 0.5;
+  border-radius: 2px;
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Birthday Countdown</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Hey love, something special is coming…</h1>
+
+    <!-- Cake with animated flame -->
+    <div class="cake-wrapper">
+      <img src="cake.png" alt="Birthday Cake" class="cake" />
+      <div class="flame"></div>
+    </div>
+
+    <!-- Countdown Timer -->
+    <div id="countdown">
+      <div><span id="days">00</span><small>Days</small></div>
+      <div><span id="hours">00</span><small>Hours</small></div>
+      <div><span id="minutes">00</span><small>Minutes</small></div>
+      <div><span id="seconds">00</span><small>Seconds</small></div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="button-group">
+      <button id="show-book">Click me for today’s journal</button>
+      <button id="show-phrase" class="hidden">Get your phrase here babe</button>
+    </div>
+
+    <!-- Journal Section -->
+    <div id="book" class="book hidden">
+      <!-- Left Page -->
+      <div class="page left-page">
+        <div class="timestamp" id="timestamp-left"></div>
+        <div class="quote-wrapper">
+          <p class="quote-text" id="love-quote"></p>
+          <p class="signature">– Iklass</p>
+        </div>
+        <p class="page-number" id="left-page-number">Page 1</p>
+      </div>
+
+      <!-- Stitched Spine -->
+      <div class="spine"></div>
+
+      <!-- Right Page -->
+      <div class="page right-page">
+        <div class="timestamp" id="timestamp-right"></div>
+        <div class="quote-wrapper">
+          <p class="quote-text" id="motivation-quote"></p>
+          <p class="signature">– Iklass</p>
+        </div>
+        <p class="page-number" id="right-page-number">Page 2</p>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </div>
+</body>
+</html>
