@@ -30,11 +30,11 @@ document.addEventListener("DOMContentLoaded", function () {
   // Show the welcome screen
   welcomeScreen.classList.remove("welcome-hidden");
 
-  // Auto-close after 5 seconds or on click
+  // Auto-close after 8 seconds or on click
   function closeWelcome() {
     welcomeScreen.classList.add("welcome-hidden");
   }
 
-  setTimeout(closeWelcome, 5000);
+  setTimeout(closeWelcome, 8000);
   welcomeScreen.addEventListener("click", closeWelcome);
 });
