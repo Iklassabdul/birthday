@@ -2,25 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Birthday Countdown</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Birthday Surprise</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 </head>
 <body>
   <div class="container">
-
-    <!-- Rotating Love Title -->
     <h1 id="rotating-title">Hey love, something special is coming…</h1>
 
-    <!-- Cake Image -->
     <div class="cake-wrapper">
       <img src="cake.png" alt="Birthday Cake" class="cake" />
       <div class="flame"></div>
     </div>
 
-    <!-- Countdown -->
     <div id="countdown">
       <div><span id="days">00</span><small>Days</small></div>
       <div><span id="hours">00</span><small>Hours</small></div>
@@ -28,45 +23,40 @@
       <div><span id="seconds">00</span><small>Seconds</small></div>
     </div>
 
-    <!-- Gift Heading -->
     <h2 id="gift-heading" class="gift-heading">Click here to unwrap your gift, my love</h2>
 
-    <!-- Minimal Audio Player -->
     <div class="simple-audio-player">
       <button id="play-button" class="play-btn">
         <span id="play-icon">&#9658;</span>
       </button>
       <div class="progress-container">
         <span id="current-time">0:00</span>
-        <input type="range" id="progress-bar" value="0" step="1" />
+        <input type="range" id="progress-bar" value="0" disabled />
         <span id="duration">0:00</span>
       </div>
-      <audio id="audio" src="/audio/a.mp4"></audio>
+      <audio id="audio"></audio>
     </div>
 
-    <!-- Gift Popup -->
-    <div id="gift-popup" class="popup hidden">
-      <p id="popup-text">Placeholder message...</p>
-      <span id="close-popup">&times;</span>
-    </div>
-
-    <!-- Password Popup -->
-    <div id="password-popup" class="popup hidden">
-      <p>Enter the secret password to reveal today's phrase:</p>
-      <input type="password" id="password-input" placeholder="Enter password" />
-      <button id="submit-password">Submit</button>
-      <span id="close-password-popup">&times;</span>
-      <p id="error-message" class="error hidden">Incorrect password, try again.</p>
-    </div>
-
-    <!-- Phrase Display -->
     <div id="phrase-display" class="hidden">
-      <p class="phrase-text">Today's phrase: <strong id="phrase-text">---</strong></p>
+      <h3 id="phrase-text">Your phrase will appear here</h3>
     </div>
-
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Gift Popup -->
+  <div id="gift-popup" class="popup hidden">
+    <span id="close-popup">&times;</span>
+    <p id="popup-text">Surprise message here</p>
+  </div>
+
+  <!-- Password Popup -->
+  <div id="password-popup" class="popup hidden">
+    <span id="close-password-popup">&times;</span>
+    <h3>Enter password to unlock today's phrase</h3>
+    <input type="password" id="password-input" placeholder="Enter your password to get today's phrase babygirl" />
+    <button id="submit-password">Unlock</button>
+    <div id="error-message" class="hidden"></div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
