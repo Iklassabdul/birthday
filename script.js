@@ -102,7 +102,8 @@ document.addEventListener("DOMContentLoaded", function () {
       book.classList.remove("show");
       setTimeout(() => {
         book.classList.add("hidden");
-        showBtn.textContent = "Click me for today’s journal";
+        showBtn.textContent = "Come read what your baby wrote today";
+        showBtn.classList.remove("glow-button");
         phraseBtn.classList.add("hidden");
       }, 300);
     } else {
@@ -111,12 +112,13 @@ document.addEventListener("DOMContentLoaded", function () {
       setTimeout(() => {
         book.classList.add("show");
       }, 10);
-      showBtn.textContent = "Hide journal";
+      showBtn.textContent = "Hide what your baby wrote 💌";
+      showBtn.classList.add("glow-button");
       phraseBtn.classList.remove("hidden");
     }
   });
 
-  // Swipe
+  // Swipe Gesture
   let startX = 0;
   let isDragging = false;
 
@@ -189,7 +191,7 @@ document.addEventListener("DOMContentLoaded", function () {
     clearTimeout(popupTimeout);
   });
 
-  // Dismiss popup on outside click
+  // Dismiss popup if clicking outside
   document.addEventListener("click", (e) => {
     if (
       !giftPopup.classList.contains("hidden") &&
