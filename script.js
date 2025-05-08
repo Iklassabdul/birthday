@@ -1,10 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Countdown Timer
+  // Countdown
   const targetDate = new Date("2025-05-31T00:00:00+01:00").getTime();
   setInterval(() => {
     const now = new Date().getTime();
     const distance = targetDate - now;
-
     const days = Math.max(0, Math.floor(distance / (1000 * 60 * 60 * 24)));
     const hours = Math.max(0, Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
     const minutes = Math.max(0, Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)));
@@ -16,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
   }, 1000);
 
-  // Rotating Heading
+  // Rotating Titles
   const titles = [
     "Something beautiful is brewing for the one who makes me smile.",
     "My woman, my everything, your surprise is almost ready.",
@@ -34,123 +33,99 @@ document.addEventListener("DOMContentLoaded", function () {
     "This one no be ordinary, na love coded in a moment."
   ];
 
+  const titleEl = document.getElementById("rotating-title");
   let titleIndex = 0;
-  const rotatingTitle = document.getElementById("rotating-title");
-
   setInterval(() => {
-    rotatingTitle.style.opacity = 0;
+    titleEl.style.opacity = 0;
     setTimeout(() => {
+      titleEl.textContent = titles[titleIndex];
+      titleEl.style.opacity = 1;
       titleIndex = (titleIndex + 1) % titles.length;
-      rotatingTitle.textContent = titles[titleIndex];
-      rotatingTitle.style.opacity = 1;
     }, 300);
   }, 5000);
 
-  // Journal Logic
-  const book = document.getElementById("book");
-  const showBtn = document.getElementById("show-book");
-  const phraseBtn = document.getElementById("show-phrase");
+  // Audio Player & Song Rotation
+  const audio = document.getElementById("audio");
+  const playButton = document.getElementById("play-button");
+  const playIcon = document.getElementById("play-icon");
+  const progressBar = document.getElementById("progress-bar");
+  const currentTimeEl = document.getElementById("current-time");
+  const durationEl = document.getElementById("duration");
 
-  const loveEl = document.getElementById("love-quote");
-  const motiEl = document.getElementById("motivation-quote");
-  const leftPageNum = document.getElementById("left-page-number");
-  const rightPageNum = document.getElementById("right-page-number");
-  const timestampLeft = document.getElementById("timestamp-left");
-  const timestampRight = document.getElementById("timestamp-right");
+  let isPlaying = false;
+  const today = new Date();
+  const currentDay = today.getDate();
+  const playDateKey = `playedSongs-${today.getFullYear()}-${today.getMonth() + 1}`;
 
-  const loveQuotes = [
-    "You're the sugar in my tea.",
-    "You calm me like Lagos rain after heat.",
-    "Even suya no sweet reach your love.",
-    "You complete me like pepper and jollof.",
-    "You dey make my heart skip like NEPA light."
-  ];
+  const allTracks = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ").slice(0, 24);
+  const playedTracks = JSON.parse(localStorage.getItem(playDateKey)) || [];
 
-  const motivationQuotes = [
-    "You’re stronger than you feel.",
-    "Greatness no dey rush — take your time.",
-    "One day, your hustle go speak for you.",
-    "No dull — your shine is loading.",
-    "Keep going. You carry power."
-  ];
-
-  let currentIndex = new Date().getDate() % loveQuotes.length;
-
-  function updateJournal(index) {
-    loveEl.textContent = loveQuotes[index % loveQuotes.length];
-    motiEl.textContent = motivationQuotes[index % motivationQuotes.length];
-
-    const now = new Date();
-    const timestamp = now.toLocaleDateString("en-US", {
-      year: "numeric", month: "short", day: "numeric"
-    }) + " — " + now.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-
-    timestampLeft.textContent = timestamp;
-    timestampRight.textContent = timestamp;
-
-    leftPageNum.textContent = `Page ${index * 2 + 1}`;
-    rightPageNum.textContent = `Page ${index * 2 + 2}`;
+  function getTodaySong() {
+    if (currentDay >= 10 && currentDay <= 31) {
+      const remaining = allTracks.filter((t) => !playedTracks.includes(t));
+      if (remaining.length > 0) {
+        const choice = remaining[Math.floor(Math.random() * remaining.length)];
+        playedTracks.push(choice);
+        localStorage.setItem(playDateKey, JSON.stringify(playedTracks));
+        return `music/${choice}.mp3`;
+      } else {
+        return null;
+      }
+    }
+    return null;
   }
 
-  showBtn.addEventListener("click", () => {
-    const isVisible = !book.classList.contains("hidden");
+  const todayTrack = getTodaySong();
+  if (todayTrack) {
+    audio.src = todayTrack;
+  }
 
-    if (isVisible) {
-      book.classList.remove("show");
-      setTimeout(() => {
-        book.classList.add("hidden");
-        showBtn.textContent = "Come read what your baby wrote today";
-        showBtn.classList.remove("glow-button");
-        phraseBtn.classList.add("hidden");
-      }, 300);
+  playButton.addEventListener("click", () => {
+    if (isPlaying) {
+      audio.pause();
     } else {
-      book.classList.remove("hidden");
-      updateJournal(currentIndex);
-      setTimeout(() => {
-        book.classList.add("show");
-      }, 10);
-      showBtn.textContent = "Hide what your baby wrote 💌";
-      showBtn.classList.add("glow-button");
-      phraseBtn.classList.remove("hidden");
+      audio.play();
     }
   });
 
-  // Swipe Gesture
-  let startX = 0;
-  let isDragging = false;
-
-  book.addEventListener("touchstart", (e) => {
-    startX = e.touches[0].clientX;
+  audio.addEventListener("play", () => {
+    isPlaying = true;
+    playIcon.innerHTML = "&#10074;&#10074;";
   });
 
-  book.addEventListener("touchend", (e) => {
-    const endX = e.changedTouches[0].clientX;
-    handleSwipe(endX - startX);
+  audio.addEventListener("pause", () => {
+    isPlaying = false;
+    playIcon.innerHTML = "&#9658;";
   });
 
-  book.addEventListener("mousedown", (e) => {
-    isDragging = true;
-    startX = e.clientX;
+  audio.addEventListener("timeupdate", () => {
+    const current = audio.currentTime;
+    const duration = audio.duration;
+    progressBar.value = current;
+    progressBar.max = duration;
+    currentTimeEl.textContent = formatTime(current);
+    durationEl.textContent = formatTime(duration);
   });
 
-  book.addEventListener("mouseup", (e) => {
-    if (!isDragging) return;
-    isDragging = false;
-    const endX = e.clientX;
-    handleSwipe(endX - startX);
+  progressBar.addEventListener("input", () => {
+    audio.currentTime = progressBar.value;
   });
 
-  function handleSwipe(deltaX) {
-    if (deltaX > 50) {
-      currentIndex = (currentIndex - 1 + loveQuotes.length) % loveQuotes.length;
-      updateJournal(currentIndex);
-    } else if (deltaX < -50) {
-      currentIndex = (currentIndex + 1) % loveQuotes.length;
-      updateJournal(currentIndex);
-    }
+  audio.addEventListener("ended", () => {
+    isPlaying = false;
+    playIcon.innerHTML = "&#9658;";
+    progressBar.value = 0;
+    currentTimeEl.textContent = "0:00";
+    passwordInput.value = "";
+    errorMsg.classList.add("hidden");
+    passwordPopup.classList.remove("hidden");
+  });
+
+  function formatTime(time) {
+    if (isNaN(time)) return "0:00";
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
 
   // Gift Popup
@@ -164,42 +139,52 @@ document.addEventListener("DOMContentLoaded", function () {
     "Hmm… you too dey rush. Let’s unwrap it together on the 31st.",
     "Chill babygirl… we still dey cook your surprise. Come back on the 31st."
   ];
-
-  let giftMsgIndex = 0;
-  let popupTimeout;
+  let msgIndex = 0;
 
   giftHeading.addEventListener("click", () => {
-    const today = new Date();
-    const giftDay = new Date("2025-05-31T00:00:00+01:00");
-
-    if (today < giftDay) {
-      popupText.textContent = giftMessages[giftMsgIndex % giftMessages.length];
-      giftMsgIndex++;
+    const birthday = new Date("2025-05-31T00:00:00+01:00");
+    if (today < birthday) {
+      popupText.textContent = giftMessages[msgIndex % giftMessages.length];
+      msgIndex++;
       giftPopup.classList.remove("hidden");
-
-      clearTimeout(popupTimeout);
-      popupTimeout = setTimeout(() => {
-        giftPopup.classList.add("hidden");
-      }, 5000);
-    } else {
-      alert("The gift is now ready! (Reveal logic goes here.)");
+      setTimeout(() => giftPopup.classList.add("hidden"), 5000);
     }
   });
 
   closePopup.addEventListener("click", () => {
     giftPopup.classList.add("hidden");
-    clearTimeout(popupTimeout);
   });
 
-  // Dismiss popup if clicking outside
-  document.addEventListener("click", (e) => {
-    if (
-      !giftPopup.classList.contains("hidden") &&
-      !giftPopup.contains(e.target) &&
-      e.target !== giftHeading
-    ) {
-      giftPopup.classList.add("hidden");
-      clearTimeout(popupTimeout);
+  // Password Popup
+  const passwordPopup = document.getElementById("password-popup");
+  const passwordInput = document.getElementById("password-input");
+  const submitBtn = document.getElementById("submit-password");
+  const closePasswordPopup = document.getElementById("close-password-popup");
+  const errorMsg = document.getElementById("error-message");
+  const phraseDisplay = document.getElementById("phrase-display");
+  const phraseText = document.getElementById("phrase-text");
+
+  const PASSWORD = "TrustMeBabe";
+  const phrases = ["Oluwakemi", "Love", "Honesty", "Communication", "Ifemi", "Ayomi", "Marriage", "Eternity", "Baker", "Birthday"];
+  const allowedDates = [12, 14, 16, 17, 19, 20, 21, 23, 24, 29];
+
+  submitBtn.addEventListener("click", () => {
+    const input = passwordInput.value.trim();
+    if (input === PASSWORD) {
+      if (allowedDates.includes(currentDay)) {
+        phraseText.textContent = phrases[allowedDates.indexOf(currentDay)];
+      } else {
+        phraseText.textContent = "Sorry my love, no phrase today. Check back tomorrow.";
+      }
+      passwordPopup.classList.add("hidden");
+      phraseDisplay.classList.remove("hidden");
+    } else {
+      errorMsg.textContent = "You entered the wrong password my love.";
+      errorMsg.classList.remove("hidden");
     }
+  });
+
+  closePasswordPopup.addEventListener("click", () => {
+    passwordPopup.classList.add("hidden");
   });
 });
