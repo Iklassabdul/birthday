@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 300);
   }, 5000);
 
-  // Audio Player & Song Rotation
+  // Audio Player & Song Logic
   const audio = document.getElementById("audio");
   const playButton = document.getElementById("play-button");
   const playIcon = document.getElementById("play-icon");
@@ -56,8 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const today = new Date();
   const currentDay = today.getDate();
   const playDateKey = `playedSongs-${today.getFullYear()}-${today.getMonth() + 1}`;
-
-  const allTracks = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ").slice(0, 24);
+  const allTracks = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ").slice(0, 24); // A to X
   const playedTracks = JSON.parse(localStorage.getItem(playDateKey)) || [];
 
   function getTodaySong() {
@@ -68,8 +67,6 @@ document.addEventListener("DOMContentLoaded", function () {
         playedTracks.push(choice);
         localStorage.setItem(playDateKey, JSON.stringify(playedTracks));
         return `music/${choice}.mp3`;
-      } else {
-        return null;
       }
     }
     return null;
@@ -107,9 +104,8 @@ document.addEventListener("DOMContentLoaded", function () {
     durationEl.textContent = formatTime(duration);
   });
 
-  progressBar.addEventListener("input", () => {
-    audio.currentTime = progressBar.value;
-  });
+  // Prevent seeking by not allowing drag
+  progressBar.addEventListener("mousedown", e => e.preventDefault());
 
   audio.addEventListener("ended", () => {
     isPlaying = false;
@@ -128,7 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
 
-  // Gift Popup
+  // Gift Heading Popup
   const giftHeading = document.getElementById("gift-heading");
   const giftPopup = document.getElementById("gift-popup");
   const popupText = document.getElementById("popup-text");
@@ -155,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function () {
     giftPopup.classList.add("hidden");
   });
 
-  // Password Popup
+  // Password Logic
   const passwordPopup = document.getElementById("password-popup");
   const passwordInput = document.getElementById("password-input");
   const submitBtn = document.getElementById("submit-password");
