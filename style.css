@@ -34,7 +34,7 @@ h1 {
   color: #d6336c;
 }
 
-/* Cake and animated glowing flame */
+/* Cake and flame */
 .cake-wrapper {
   position: relative;
   display: inline-block;
@@ -70,34 +70,34 @@ h1 {
   75% { transform: translateX(-50%) scale(0.95); opacity: 0.85; }
 }
 
-/* Countdown */
+/* Countdown always in one line */
 #countdown {
   display: flex;
   justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
   margin-bottom: 20px;
 }
 
 #countdown div {
   background: #fff0f3;
-  padding: 15px;
-  border-radius: 10px;
-  flex: 1 1 45%;
-  min-width: 80px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+  flex: 1;
+  min-width: 60px;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(255, 77, 109, 0.15);
   text-align: center;
 }
 
 #countdown span {
-  display: block;
-  font-size: 2rem;
+  font-size: 1.2rem;
   font-weight: bold;
   color: #ff4d6d;
 }
 
 #countdown small {
-  font-size: 0.85rem;
+  font-size: 0.7rem;
   color: #6c757d;
 }
 
@@ -307,17 +307,15 @@ button:hover {
 
 @media (max-width: 480px) {
   #countdown span {
-    font-size: 1.5rem;
+    font-size: 1rem;
   }
 
   #countdown small {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
   }
 
   #countdown div {
-    padding: 10px;
-    flex: 1 1 45%;
-    min-width: 70px;
+    padding: 8px;
   }
 
   button {
