@@ -1,22 +1,57 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Countdown
+  // Welcome Screen Logic
+  const welcomeEl = document.getElementById("welcome-screen");
+  const messageEl = document.getElementById("welcome-message");
+
+  const welcomeMessages = [
+    "System status: Waiting for Oluwakemi’s birthday...<br>Programmed with love, patience, and a little surprise.",
+    "Hello Oluwakemi,<br>Before anything else, just know, this page is love in digital form. Count it down with me.",
+    "Dear Oluwakemi,<br>Every sunrise brings us closer. This countdown? It’s my silent way of saying “I’m thinking of you.”",
+    "Oluwakemi,<br>Some people write letters. I build webpages. And this one? It’s all for you.",
+    "Hey beautiful,<br>I didn’t just build a page... I planted a surprise that blooms on your birthday.",
+    "You may not see the effort...<br>But every second behind this was for one thing — making your birthday feel a little more special, Oluwakemi.",
+    "This page exists for one reason:<br>You. And the joy of seeing you smile.",
+    "Hi Oluwakemi,<br>They say love is shown in little things. So here’s a page, counting down to a day that means everything to me.",
+    "Oluwakemi,<br>I coded a surprise into the future. Keep checking... it’s going to be sweet.",
+    "Some gifts come wrapped in ribbons,<br>Others, in intention. This one is wrapped in code, crafted for you, Oluwakemi.",
+    "Hi Oluwakemi,<br>A little something to remind you how special you are... Let the countdown to your day begin.",
+    "Oluwakemi,<br>This isn’t just a website... it’s a journey. And it all leads to your birthday.",
+    "I may not be a magician...<br>But I made this just for you. Let the countdown begin.",
+    "Dear Oluwakemi,<br>Every moment, every second... brings us closer to your light. This page was built with love and a little hope to make you smile.",
+    "Hello Oluwakemi,<br>This is for you. A quiet countdown to something special.",
+    "Oluwakemi,<br>This isn’t just a countdown... It’s my way of showing how much I care. Built with love just for you.",
+    "To my favorite person,<br>Every second brings us closer to your day. This page was crafted with all my heart.",
+    "Hey Oluwakemi,<br>Something special is waiting for you here. Let’s count down to it together.",
+    "I didn’t wrap this in paper,<br>I built it in code. A gift made with love... and a few lines of JavaScript."
+  ];
+
+  const now = new Date();
+  const watHour = (now.getUTCHours() + 1) % 24;
+  let greeting = "Good morning";
+  if (watHour >= 12 && watHour < 17) greeting = "Good afternoon";
+  else if (watHour >= 17) greeting = "Good evening";
+
+  const randomMsg = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+  messageEl.innerHTML = `${greeting}, Oluwakemi.<br><br>${randomMsg}`;
+  setTimeout(() => welcomeEl.classList.add("fade-out"), 5000);
+
+  // Countdown Timer
   const targetDate = new Date("2025-05-31T00:00:00+01:00").getTime();
   setInterval(() => {
     const now = new Date().getTime();
-    const distance = targetDate - now;
-    const days = Math.max(0, Math.floor(distance / (1000 * 60 * 60 * 24)));
-    const hours = Math.max(0, Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
-    const minutes = Math.max(0, Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)));
-    const seconds = Math.max(0, Math.floor((distance % (1000 * 60)) / 1000));
-
-    document.getElementById("days").textContent = String(days).padStart(2, "0");
-    document.getElementById("hours").textContent = String(hours).padStart(2, "0");
-    document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
-    document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+    const diff = targetDate - now;
+    const d = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
+    const h = Math.max(0, Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+    const m = Math.max(0, Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)));
+    const s = Math.max(0, Math.floor((diff % (1000 * 60)) / 1000));
+    document.getElementById("days").textContent = String(d).padStart(2, "0");
+    document.getElementById("hours").textContent = String(h).padStart(2, "0");
+    document.getElementById("minutes").textContent = String(m).padStart(2, "0");
+    document.getElementById("seconds").textContent = String(s).padStart(2, "0");
   }, 1000);
 
-  // Rotating Titles
-  const titles = [
+  // Rotating Title
+  const messages = [
     "Something beautiful is brewing for the one who makes me smile.",
     "My woman, my everything, your surprise is almost ready.",
     "You’ve been my peace… now let me return the joy.",
@@ -32,57 +67,43 @@ document.addEventListener("DOMContentLoaded", function () {
     "What’s coming is a small version of the big love I carry for you.",
     "This one no be ordinary, na love coded in a moment."
   ];
-
   const titleEl = document.getElementById("rotating-title");
-  let titleIndex = 0;
+  let msgIndex = 0;
   setInterval(() => {
     titleEl.style.opacity = 0;
     setTimeout(() => {
-      titleEl.textContent = titles[titleIndex];
+      titleEl.textContent = messages[msgIndex];
       titleEl.style.opacity = 1;
-      titleIndex = (titleIndex + 1) % titles.length;
+      msgIndex = (msgIndex + 1) % messages.length;
     }, 300);
   }, 5000);
 
-  // Audio Player & Song Logic
+  // Audio Player
   const audio = document.getElementById("audio");
-  const playButton = document.getElementById("play-button");
+  const playBtn = document.getElementById("play-button");
   const playIcon = document.getElementById("play-icon");
-  const progressBar = document.getElementById("progress-bar");
+  const progress = document.getElementById("progress-bar");
   const currentTimeEl = document.getElementById("current-time");
   const durationEl = document.getElementById("duration");
 
   let isPlaying = false;
-  const today = new Date();
-  const currentDay = today.getDate();
-  const playDateKey = `playedSongs-${today.getFullYear()}-${today.getMonth() + 1}`;
-  const allTracks = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ").slice(0, 24); // A to X
-  const playedTracks = JSON.parse(localStorage.getItem(playDateKey)) || [];
+  const todayKey = new Date().toISOString().slice(0, 10);
+  const playedTodayKey = `played-song-${todayKey}`;
+  const allTracks = Array.from("abcdefghijklmnopqrstuvwxyz").slice(0, 24);
 
-  function getTodaySong() {
-    if (currentDay >= 10 && currentDay <= 31) {
-      const remaining = allTracks.filter((t) => !playedTracks.includes(t));
-      if (remaining.length > 0) {
-        const choice = remaining[Math.floor(Math.random() * remaining.length)];
-        playedTracks.push(choice);
-        localStorage.setItem(playDateKey, JSON.stringify(playedTracks));
-        return `music/${choice}.mp3`;
-      }
-    }
-    return null;
+  function pickSongForToday() {
+    let alreadyPlayed = localStorage.getItem(playedTodayKey);
+    if (alreadyPlayed) return `music/${alreadyPlayed}.mp4`;
+    const random = allTracks[Math.floor(Math.random() * allTracks.length)];
+    localStorage.setItem(playedTodayKey, random);
+    return `music/${random}.mp4`;
   }
 
-  const todayTrack = getTodaySong();
-  if (todayTrack) {
-    audio.src = todayTrack;
-  }
+  const todayTrack = pickSongForToday();
+  audio.src = todayTrack;
 
-  playButton.addEventListener("click", () => {
-    if (isPlaying) {
-      audio.pause();
-    } else {
-      audio.play();
-    }
+  playBtn.addEventListener("click", () => {
+    isPlaying ? audio.pause() : audio.play();
   });
 
   audio.addEventListener("play", () => {
@@ -96,79 +117,70 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   audio.addEventListener("timeupdate", () => {
-    const current = audio.currentTime;
-    const duration = audio.duration;
-    progressBar.value = current;
-    progressBar.max = duration;
-    currentTimeEl.textContent = formatTime(current);
-    durationEl.textContent = formatTime(duration);
+    progress.value = audio.currentTime;
+    progress.max = audio.duration;
+    currentTimeEl.textContent = formatTime(audio.currentTime);
+    durationEl.textContent = formatTime(audio.duration);
   });
 
-  // Prevent seeking by not allowing drag
-  progressBar.addEventListener("mousedown", e => e.preventDefault());
+  progress.addEventListener("mousedown", e => e.preventDefault());
+
+  function formatTime(seconds) {
+    const min = Math.floor(seconds / 60);
+    const sec = Math.floor(seconds % 60).toString().padStart(2, "0");
+    return `${min}:${sec}`;
+  }
 
   audio.addEventListener("ended", () => {
     isPlaying = false;
     playIcon.innerHTML = "&#9658;";
-    progressBar.value = 0;
-    currentTimeEl.textContent = "0:00";
-    passwordInput.value = "";
-    errorMsg.classList.add("hidden");
-    passwordPopup.classList.remove("hidden");
+    document.getElementById("password-popup").classList.remove("hidden");
+    document.getElementById("password-input").value = "";
+    document.getElementById("error-message").classList.add("hidden");
   });
 
-  function formatTime(time) {
-    if (isNaN(time)) return "0:00";
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-  }
-
-  // Gift Heading Popup
+  // Gift Popup
   const giftHeading = document.getElementById("gift-heading");
   const giftPopup = document.getElementById("gift-popup");
   const popupText = document.getElementById("popup-text");
-  const closePopup = document.getElementById("close-popup");
-
-  const giftMessages = [
+  const giftLines = [
     "A queen like you deserves to wait for a royal reveal. Patience, my love.",
     "Hmm… you too dey rush. Let’s unwrap it together on the 31st.",
     "Chill babygirl… we still dey cook your surprise. Come back on the 31st."
   ];
-  let msgIndex = 0;
+  let popupIndex = 0;
 
   giftHeading.addEventListener("click", () => {
-    const birthday = new Date("2025-05-31T00:00:00+01:00");
-    if (today < birthday) {
-      popupText.textContent = giftMessages[msgIndex % giftMessages.length];
-      msgIndex++;
-      giftPopup.classList.remove("hidden");
-      setTimeout(() => giftPopup.classList.add("hidden"), 5000);
-    }
+    popupText.textContent = giftLines[popupIndex % giftLines.length];
+    popupIndex++;
+    giftPopup.classList.remove("hidden");
+    setTimeout(() => giftPopup.classList.add("hidden"), 5000);
   });
 
-  closePopup.addEventListener("click", () => {
+  document.getElementById("close-popup").addEventListener("click", () => {
     giftPopup.classList.add("hidden");
   });
 
-  // Password Logic
+  // Password Unlock
   const passwordPopup = document.getElementById("password-popup");
   const passwordInput = document.getElementById("password-input");
   const submitBtn = document.getElementById("submit-password");
-  const closePasswordPopup = document.getElementById("close-password-popup");
   const errorMsg = document.getElementById("error-message");
+  const closePasswordPopup = document.getElementById("close-password-popup");
+
   const phraseDisplay = document.getElementById("phrase-display");
   const phraseText = document.getElementById("phrase-text");
 
   const PASSWORD = "TrustMeBabe";
+  const phraseDates = [12, 14, 16, 17, 19, 20, 21, 23, 24, 29];
   const phrases = ["Oluwakemi", "Love", "Honesty", "Communication", "Ifemi", "Ayomi", "Marriage", "Eternity", "Baker", "Birthday"];
-  const allowedDates = [12, 14, 16, 17, 19, 20, 21, 23, 24, 29];
+  const currentDay = new Date().getDate();
 
   submitBtn.addEventListener("click", () => {
     const input = passwordInput.value.trim();
     if (input === PASSWORD) {
-      if (allowedDates.includes(currentDay)) {
-        phraseText.textContent = phrases[allowedDates.indexOf(currentDay)];
+      if (phraseDates.includes(currentDay)) {
+        phraseText.textContent = phrases[phraseDates.indexOf(currentDay)];
       } else {
         phraseText.textContent = "Sorry my love, no phrase today. Check back tomorrow.";
       }
