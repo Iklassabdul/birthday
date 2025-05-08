@@ -52,21 +52,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let isPlaying = false;
 
-  const todayKey = new Date().toISOString().slice(0, 10); // e.g. 2025-05-09
+  const todayKey = new Date().toISOString().slice(0, 10);
   const playedTodayKey = `played-song-${todayKey}`;
-  const allTracks = Array.from("abcdefghijklmnopqrstuvwxyz").slice(0, 24); // lowercase a–x
+  const allTracks = ["a", "b"];
 
   function pickSongForToday() {
-    let alreadyPlayed = localStorage.getItem(playedTodayKey);
-    if (alreadyPlayed) return `music/${alreadyPlayed}.mp4`;
-
-    const random = allTracks[Math.floor(Math.random() * allTracks.length)];
-    localStorage.setItem(playedTodayKey, random);
-    return `music/${random}.mp4`;
+    try {
+      const stored = localStorage.getItem(playedTodayKey);
+      if (stored && allTracks.includes(stored)) {
+        return `audio/${stored}.mp3`;
+      }
+      const random = allTracks[Math.floor(Math.random() * allTracks.length)];
+      localStorage.setItem(playedTodayKey, random);
+      return `audio/${random}.mp3`;
+    } catch (err) {
+      console.error("Song pick failed, defaulting to a.mp3:", err);
+      return "audio/a.mp3";
+    }
   }
 
   const todayTrack = pickSongForToday();
   audio.src = todayTrack;
+  audio.load();
+
+  audio.onerror = () => {
+    alert("Oops! Couldn’t load the audio file. Please make sure 'a.mp3' or 'b.mp3' exists in the 'audio/' folder.");
+  };
 
   playBtn.addEventListener("click", () => {
     isPlaying ? audio.pause() : audio.play();
@@ -89,12 +100,6 @@ document.addEventListener("DOMContentLoaded", function () {
     durationEl.textContent = formatTime(audio.duration);
   });
 
-  function formatTime(seconds) {
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60).toString().padStart(2, "0");
-    return `${min}:${sec}`;
-  }
-
   progress.addEventListener("mousedown", e => e.preventDefault());
 
   audio.addEventListener("ended", () => {
@@ -104,6 +109,12 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("password-input").value = "";
     document.getElementById("error-message").classList.add("hidden");
   });
+
+  function formatTime(seconds) {
+    const min = Math.floor(seconds / 60);
+    const sec = Math.floor(seconds % 60).toString().padStart(2, "0");
+    return `${min}:${sec}`;
+  }
 
   // Gift Popup
   const giftHeading = document.getElementById("gift-heading");
