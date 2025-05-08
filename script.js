@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // ========== Countdown Timer ==========
+  // Countdown Timer
   const targetDate = new Date("2025-05-31T00:00:00+01:00").getTime();
-
   setInterval(() => {
     const now = new Date().getTime();
     const distance = targetDate - now;
@@ -17,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
   }, 1000);
 
-  // ========== Rotating Title ==========
+  // Rotating Heading
   const titles = [
     "Something beautiful is brewing for the one who makes me smile.",
     "My woman, my everything, your surprise is almost ready.",
@@ -47,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 300);
   }, 5000);
 
-  // ========== Journal Logic ==========
+  // Journal Logic
   const book = document.getElementById("book");
   const showBtn = document.getElementById("show-book");
   const phraseBtn = document.getElementById("show-phrase");
@@ -117,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // ========== Swipe Gestures ==========
+  // Swipe
   let startX = 0;
   let isDragging = false;
 
@@ -152,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // ========== Gift Popup Logic ==========
+  // Gift Popup
   const giftHeading = document.getElementById("gift-heading");
   const giftPopup = document.getElementById("gift-popup");
   const popupText = document.getElementById("popup-text");
@@ -165,6 +164,7 @@ document.addEventListener("DOMContentLoaded", function () {
   ];
 
   let giftMsgIndex = 0;
+  let popupTimeout;
 
   giftHeading.addEventListener("click", () => {
     const today = new Date();
@@ -174,6 +174,11 @@ document.addEventListener("DOMContentLoaded", function () {
       popupText.textContent = giftMessages[giftMsgIndex % giftMessages.length];
       giftMsgIndex++;
       giftPopup.classList.remove("hidden");
+
+      clearTimeout(popupTimeout);
+      popupTimeout = setTimeout(() => {
+        giftPopup.classList.add("hidden");
+      }, 5000);
     } else {
       alert("The gift is now ready! (Reveal logic goes here.)");
     }
@@ -181,5 +186,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   closePopup.addEventListener("click", () => {
     giftPopup.classList.add("hidden");
+    clearTimeout(popupTimeout);
+  });
+
+  // Dismiss popup on outside click
+  document.addEventListener("click", (e) => {
+    if (
+      !giftPopup.classList.contains("hidden") &&
+      !giftPopup.contains(e.target) &&
+      e.target !== giftHeading
+    ) {
+      giftPopup.classList.add("hidden");
+      clearTimeout(popupTimeout);
+    }
   });
 });

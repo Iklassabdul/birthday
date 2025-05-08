@@ -28,13 +28,19 @@ body {
   width: 100%;
 }
 
-/* Rotating title with Playfair Display */
+/* Rotating title with fixed height */
 #rotating-title {
   font-family: 'Playfair Display', serif;
   font-size: 1.8rem;
   color: #d6336c;
-  margin-bottom: 25px;
+  min-height: 90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   transition: opacity 0.5s ease;
+  overflow-wrap: break-word;
+  text-align: center;
+  margin-bottom: 25px;
 }
 
 /* Glowing gift heading */
@@ -97,18 +103,19 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 8px;
-  flex-wrap: nowrap;
   margin-bottom: 20px;
 }
 
 #countdown div {
   background: #fff0f3;
-  flex: 1;
-  min-width: 60px;
-  padding: 10px;
-  border-radius: 12px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
   box-shadow: 0 3px 10px rgba(255, 77, 109, 0.15);
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 #countdown span {
