@@ -17,7 +17,37 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
   }, 1000);
 
-  // Journal Logic
+  // Rotating Title Logic
+  const titles = [
+    "Something beautiful is brewing for the one who makes me smile.",
+    "My woman, my everything, your surprise is almost ready.",
+    "You’ve been my peace… now let me return the joy.",
+    "I get one small thing wey go make your heart do gbim gbim…",
+    "Hey love, something special is coming…",
+    "You no go expect the love wey I package for you…",
+    "Something dey load wey go make you blush tire…",
+    "Get ready to scream ‘awww’, it’s coming…",
+    "My love, something crafted just for you is almost here…",
+    "My love, May 31st go loud… just wait.",
+    "This surprise na just a piece of how I feel for you.",
+    "I dey express the love wey words no fit capture.",
+    "What’s coming is a small version of the big love I carry for you.",
+    "This one no be ordinary, na love coded in a moment."
+  ];
+
+  let titleIndex = 0;
+  const rotatingTitle = document.getElementById("rotating-title");
+
+  setInterval(() => {
+    rotatingTitle.style.opacity = 0;
+    setTimeout(() => {
+      titleIndex = (titleIndex + 1) % titles.length;
+      rotatingTitle.textContent = titles[titleIndex];
+      rotatingTitle.style.opacity = 1;
+    }, 300);
+  }, 5000);
+
+  // Journal Setup
   const book = document.getElementById("book");
   const showBtn = document.getElementById("show-book");
   const phraseBtn = document.getElementById("show-phrase");
@@ -66,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
     rightPageNum.textContent = `Page ${index * 2 + 2}`;
   }
 
-  // Toggle Journal + Reveal Second Button
+  // Toggle Journal + Reveal Phrase Button
   showBtn.addEventListener("click", () => {
     const isVisible = !book.classList.contains("hidden");
 
@@ -123,8 +153,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Placeholder: You can later attach this to unlock a modal, input, etc.
+  // Placeholder for phrase button action
   phraseBtn.addEventListener("click", () => {
-    alert("This is where the phrase feature will go!");
+    alert("This is where your phrase hint or unlock section will go.");
   });
 });

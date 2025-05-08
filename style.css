@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Pacifico&family=Great+Vibes&display=swap');
 
 /* Reset */
 * {
@@ -28,10 +28,13 @@ body {
   width: 100%;
 }
 
-h1 {
-  font-size: 1.8rem;
-  margin-bottom: 20px;
+/* Rotating title */
+#rotating-title {
+  font-family: 'Great Vibes', cursive;
+  font-size: 1.9rem;
   color: #d6336c;
+  margin-bottom: 25px;
+  transition: opacity 0.5s ease;
 }
 
 /* Cake and flame */
@@ -255,7 +258,7 @@ button:hover {
   100% { transform: translateX(-5px); }
 }
 
-/* Stitched spine look */
+/* Stitched spine */
 .spine {
   width: 4px;
   background: repeating-linear-gradient(
@@ -321,5 +324,9 @@ button:hover {
   button {
     font-size: 0.9rem;
     padding: 10px 15px;
+  }
+
+  #rotating-title {
+    font-size: 1.5rem;
   }
 }
