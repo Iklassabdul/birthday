@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Countdown Timer
+  // ========== Countdown Timer ==========
   const targetDate = new Date("2025-05-31T00:00:00+01:00").getTime();
 
   setInterval(() => {
@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
   }, 1000);
 
-  // Rotating Title Logic
+  // ========== Rotating Title ==========
   const titles = [
     "Something beautiful is brewing for the one who makes me smile.",
     "My woman, my everything, your surprise is almost ready.",
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 300);
   }, 5000);
 
-  // Journal Setup
+  // ========== Journal Logic ==========
   const book = document.getElementById("book");
   const showBtn = document.getElementById("show-book");
   const phraseBtn = document.getElementById("show-phrase");
@@ -96,7 +96,6 @@ document.addEventListener("DOMContentLoaded", function () {
     rightPageNum.textContent = `Page ${index * 2 + 2}`;
   }
 
-  // Toggle Journal + Reveal Phrase Button
   showBtn.addEventListener("click", () => {
     const isVisible = !book.classList.contains("hidden");
 
@@ -118,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Swipe Gestures
+  // ========== Swipe Gestures ==========
   let startX = 0;
   let isDragging = false;
 
@@ -153,8 +152,34 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Placeholder for phrase button action
-  phraseBtn.addEventListener("click", () => {
-    alert("This is where your phrase hint or unlock section will go.");
+  // ========== Gift Popup Logic ==========
+  const giftHeading = document.getElementById("gift-heading");
+  const giftPopup = document.getElementById("gift-popup");
+  const popupText = document.getElementById("popup-text");
+  const closePopup = document.getElementById("close-popup");
+
+  const giftMessages = [
+    "A queen like you deserves to wait for a royal reveal. Patience, my love.",
+    "Hmm… you too dey rush. Let’s unwrap it together on the 31st.",
+    "Chill babygirl… we still dey cook your surprise. Come back on the 31st."
+  ];
+
+  let giftMsgIndex = 0;
+
+  giftHeading.addEventListener("click", () => {
+    const today = new Date();
+    const giftDay = new Date("2025-05-31T00:00:00+01:00");
+
+    if (today < giftDay) {
+      popupText.textContent = giftMessages[giftMsgIndex % giftMessages.length];
+      giftMsgIndex++;
+      giftPopup.classList.remove("hidden");
+    } else {
+      alert("The gift is now ready! (Reveal logic goes here.)");
+    }
+  });
+
+  closePopup.addEventListener("click", () => {
+    giftPopup.classList.add("hidden");
   });
 });

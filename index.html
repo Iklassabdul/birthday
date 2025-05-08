@@ -6,7 +6,7 @@
   <title>Birthday Countdown</title>
 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Pacifico&family=Great+Vibes&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;600&family=Pacifico&display=swap" rel="stylesheet" />
 
   <!-- Styles -->
   <link rel="stylesheet" href="style.css" />
@@ -14,10 +14,10 @@
 <body>
   <div class="container">
 
-    <!-- Rotating Heading -->
+    <!-- Rotating Title -->
     <h1 id="rotating-title">Hey love, something special is coming…</h1>
 
-    <!-- Cake with animated flame -->
+    <!-- Cake Image with Flame -->
     <div class="cake-wrapper">
       <img src="cake.png" alt="Birthday Cake" class="cake" />
       <div class="flame"></div>
@@ -31,13 +31,16 @@
       <div><span id="seconds">00</span><small>Seconds</small></div>
     </div>
 
-    <!-- Buttons -->
+    <!-- Gift Heading ABOVE the buttons -->
+    <h2 id="gift-heading" class="gift-heading">Click here to unwrap your gift, my love</h2>
+
+    <!-- Buttons (Journal & Phrase) -->
     <div class="button-group">
       <button id="show-book">Click me for today’s journal</button>
       <button id="show-phrase" class="hidden">Get your phrase here babe</button>
     </div>
 
-    <!-- Journal Section -->
+    <!-- Journal Layout -->
     <div id="book" class="book hidden">
       <!-- Left Page -->
       <div class="page left-page">
@@ -63,6 +66,13 @@
       </div>
     </div>
 
+    <!-- Popup Modal for Gift Message -->
+    <div id="gift-popup" class="popup hidden">
+      <p id="popup-text">Placeholder message...</p>
+      <span id="close-popup">&times;</span>
+    </div>
+
+    <!-- Scripts -->
     <script src="script.js"></script>
   </div>
 </body>

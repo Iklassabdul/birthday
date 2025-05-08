@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Pacifico&family=Great+Vibes&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;600&family=Pacifico&display=swap');
 
 /* Reset */
 * {
@@ -28,13 +28,31 @@ body {
   width: 100%;
 }
 
-/* Rotating title */
+/* Rotating title with Playfair Display */
 #rotating-title {
-  font-family: 'Great Vibes', cursive;
-  font-size: 1.9rem;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
   color: #d6336c;
   margin-bottom: 25px;
   transition: opacity 0.5s ease;
+}
+
+/* Glowing gift heading */
+.gift-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #c2185b;
+  margin: 20px 0 10px;
+  text-shadow: 0 0 10px #ff80ab, 0 0 20px #f06292;
+  animation: glowPulse 2s ease-in-out infinite;
+  cursor: pointer;
+}
+
+@keyframes glowPulse {
+  0% { text-shadow: 0 0 5px #f48fb1, 0 0 10px #f06292; }
+  50% { text-shadow: 0 0 15px #ff80ab, 0 0 30px #f06292; }
+  100% { text-shadow: 0 0 5px #f48fb1, 0 0 10px #f06292; }
 }
 
 /* Cake and flame */
@@ -73,7 +91,7 @@ body {
   75% { transform: translateX(-50%) scale(0.95); opacity: 0.85; }
 }
 
-/* Countdown always in one line */
+/* Countdown */
 #countdown {
   display: flex;
   justify-content: space-between;
@@ -104,7 +122,7 @@ body {
   color: #6c757d;
 }
 
-/* Button group */
+/* Buttons */
 .button-group {
   display: flex;
   justify-content: center;
@@ -135,7 +153,7 @@ button:hover {
   display: none !important;
 }
 
-/* Book Layout */
+/* Journal */
 .book {
   display: flex;
   justify-content: space-between;
@@ -237,27 +255,6 @@ button:hover {
   right: 10px;
 }
 
-/* Swipe Arrow Animation */
-.swipe-arrow {
-  width: 4%;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  position: relative;
-  bottom: 25px;
-  font-size: 20px;
-  color: #aaa;
-  animation: arrowSwipe 1.2s ease-in-out infinite;
-  z-index: 2;
-  pointer-events: none;
-}
-
-@keyframes arrowSwipe {
-  0%   { transform: translateX(-5px); }
-  50%  { transform: translateX(5px); }
-  100% { transform: translateX(-5px); }
-}
-
 /* Stitched spine */
 .spine {
   width: 4px;
@@ -273,7 +270,45 @@ button:hover {
   border-radius: 2px;
 }
 
-/* Responsive Adjustments */
+/* Gift Popup */
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  background: #fff0f5;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  padding: 20px 25px;
+  z-index: 999;
+  width: 80%;
+  max-width: 400px;
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.popup p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  color: #333;
+  margin: 0;
+}
+
+.popup #close-popup {
+  position: absolute;
+  top: 8px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  color: #888;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .book {
     flex-direction: column;
@@ -289,22 +324,6 @@ button:hover {
 
   .spine {
     display: none;
-  }
-
-  .quote-text {
-    font-size: 1.1rem;
-  }
-
-  .signature {
-    font-size: 0.95rem;
-  }
-
-  .timestamp {
-    font-size: 0.7rem;
-  }
-
-  .page-number {
-    font-size: 0.7rem;
   }
 }
 
