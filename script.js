@@ -1,68 +1,111 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // --- Welcome Screen ---
-  const welcomeEl = document.getElementById("welcome-screen");
-  const messageEl = document.getElementById("welcome-message");
-  const watHour = (new Date().getUTCHours() + 1) % 24;
-  const greeting = watHour >= 12 && watHour < 17 ? "Good afternoon" : watHour >= 17 ? "Good evening" : "Good morning";
-
-  const welcomeMessages = [
-    "System status: Waiting for Oluwakemi’s birthday...<br>Programmed with love, patience, and a little surprise.",
-    "Hello Oluwakemi,<br>Before anything else, just know, this page is love in digital form. Count it down with me.",
-    "Dear Oluwakemi,<br>Every sunrise brings us closer. This countdown? It’s my silent way of saying 'I’m thinking of you.'",
-    "Oluwakemi,<br>Some people write letters. I build webpages. And this one? It’s all for you.",
-    "Hey beautiful,<br>I didn’t just build a page... I planted a surprise that blooms on your birthday.",
-    "You may not see the effort...<br>But every second behind this was for one thing — making your birthday feel a little more special, Oluwakemi."
-  ];
-
-  const randomMsg = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
-  messageEl.innerHTML = `${greeting}, Oluwakemi.<br><br>${randomMsg}`;
-
-  setTimeout(() => {
-    welcomeEl.classList.add("fade-out");
-    setTimeout(() => {
-      welcomeEl.style.display = "none";
-      document.body.style.overflow = "auto";
-    }, 1000);
-  }, 5000);
-
-  // --- Countdown Timer ---
+  // Countdown Timer
   const targetDate = new Date("2025-05-31T00:00:00+01:00").getTime();
   setInterval(() => {
     const now = new Date().getTime();
-    const distance = targetDate - now;
-
-    const days = Math.max(0, Math.floor(distance / (1000 * 60 * 60 * 24)));
-    const hours = Math.max(0, Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
-    const minutes = Math.max(0, Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)));
-    const seconds = Math.max(0, Math.floor((distance % (1000 * 60)) / 1000));
-
-    document.getElementById("days").textContent = String(days).padStart(2, "0");
-    document.getElementById("hours").textContent = String(hours).padStart(2, "0");
-    document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
-    document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+    const diff = targetDate - now;
+    const d = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
+    const h = Math.max(0, Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+    const m = Math.max(0, Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)));
+    const s = Math.max(0, Math.floor((diff % (1000 * 60)) / 1000));
+    document.getElementById("days").textContent = String(d).padStart(2, "0");
+    document.getElementById("hours").textContent = String(h).padStart(2, "0");
+    document.getElementById("minutes").textContent = String(m).padStart(2, "0");
+    document.getElementById("seconds").textContent = String(s).padStart(2, "0");
   }, 1000);
 
-  // --- Rotating Titles ---
-  const rotatingTitles = [
+  // Rotating Title Messages
+  const messages = [
     "Something beautiful is brewing for the one who makes me smile.",
     "My woman, my everything, your surprise is almost ready.",
     "You’ve been my peace… now let me return the joy.",
     "I get one small thing wey go make your heart do gbim gbim…",
-    "Hey love, something special is coming…"
+    "Hey love, something special is coming…",
+    "You no go expect the love wey I package for you…",
+    "Something dey load wey go make you blush tire…",
+    "Get ready to scream ‘awww’, it’s coming…",
+    "My love, something crafted just for you is almost here…",
+    "My love, May 31st go loud… just wait.",
+    "This surprise na just a piece of how I feel for you.",
+    "I dey express the love wey words no fit capture.",
+    "What’s coming is a small version of the big love I carry for you.",
+    "This one no be ordinary, na love coded in a moment."
   ];
   const titleEl = document.getElementById("rotating-title");
-  let rotateIndex = 0;
-
+  let msgIndex = 0;
   setInterval(() => {
     titleEl.style.opacity = 0;
     setTimeout(() => {
-      titleEl.textContent = rotatingTitles[rotateIndex];
+      titleEl.textContent = messages[msgIndex];
       titleEl.style.opacity = 1;
-      rotateIndex = (rotateIndex + 1) % rotatingTitles.length;
+      msgIndex = (msgIndex + 1) % messages.length;
     }, 300);
   }, 5000);
 
-  // --- Gift Popup ---
+  // Audio Logic
+  const audio = document.getElementById("audio");
+  const playBtn = document.getElementById("play-button");
+  const playIcon = document.getElementById("play-icon");
+  const progress = document.getElementById("progress-bar");
+  const currentTimeEl = document.getElementById("current-time");
+  const durationEl = document.getElementById("duration");
+
+  let isPlaying = false;
+
+  const todayKey = new Date().toISOString().slice(0, 10); // e.g. 2025-05-09
+  const playedTodayKey = `played-song-${todayKey}`;
+  const allTracks = Array.from("abcdefghijklmnopqrstuvwxyz").slice(0, 24); // lowercase a–x
+
+  function pickSongForToday() {
+    let alreadyPlayed = localStorage.getItem(playedTodayKey);
+    if (alreadyPlayed) return `music/${alreadyPlayed}.mp4`;
+
+    const random = allTracks[Math.floor(Math.random() * allTracks.length)];
+    localStorage.setItem(playedTodayKey, random);
+    return `music/${random}.mp4`;
+  }
+
+  const todayTrack = pickSongForToday();
+  audio.src = todayTrack;
+
+  playBtn.addEventListener("click", () => {
+    isPlaying ? audio.pause() : audio.play();
+  });
+
+  audio.addEventListener("play", () => {
+    isPlaying = true;
+    playIcon.innerHTML = "&#10074;&#10074;";
+  });
+
+  audio.addEventListener("pause", () => {
+    isPlaying = false;
+    playIcon.innerHTML = "&#9658;";
+  });
+
+  audio.addEventListener("timeupdate", () => {
+    progress.value = audio.currentTime;
+    progress.max = audio.duration;
+    currentTimeEl.textContent = formatTime(audio.currentTime);
+    durationEl.textContent = formatTime(audio.duration);
+  });
+
+  function formatTime(seconds) {
+    const min = Math.floor(seconds / 60);
+    const sec = Math.floor(seconds % 60).toString().padStart(2, "0");
+    return `${min}:${sec}`;
+  }
+
+  progress.addEventListener("mousedown", e => e.preventDefault());
+
+  audio.addEventListener("ended", () => {
+    isPlaying = false;
+    playIcon.innerHTML = "&#9658;";
+    document.getElementById("password-popup").classList.remove("hidden");
+    document.getElementById("password-input").value = "";
+    document.getElementById("error-message").classList.add("hidden");
+  });
+
+  // Gift Popup
   const giftHeading = document.getElementById("gift-heading");
   const giftPopup = document.getElementById("gift-popup");
   const popupText = document.getElementById("popup-text");
@@ -71,11 +114,11 @@ document.addEventListener("DOMContentLoaded", function () {
     "Hmm… you too dey rush. Let’s unwrap it together on the 31st.",
     "Chill babygirl… we still dey cook your surprise. Come back on the 31st."
   ];
-  let lineIndex = 0;
+  let popupIndex = 0;
 
   giftHeading.addEventListener("click", () => {
-    popupText.textContent = giftLines[lineIndex];
-    lineIndex = (lineIndex + 1) % giftLines.length;
+    popupText.textContent = giftLines[popupIndex % giftLines.length];
+    popupIndex++;
     giftPopup.classList.remove("hidden");
     setTimeout(() => giftPopup.classList.add("hidden"), 5000);
   });
@@ -84,83 +127,38 @@ document.addEventListener("DOMContentLoaded", function () {
     giftPopup.classList.add("hidden");
   });
 
-  // --- Audio Player ---
-  const audio = document.getElementById("audio");
-  const playBtn = document.getElementById("play-button");
-  const playIcon = document.getElementById("play-icon");
-  const progressBar = document.getElementById("progress-bar");
-  const currentTimeEl = document.getElementById("current-time");
-  const durationEl = document.getElementById("duration");
+  // Password Phrase Unlock
+  const passwordPopup = document.getElementById("password-popup");
+  const passwordInput = document.getElementById("password-input");
+  const submitBtn = document.getElementById("submit-password");
+  const errorMsg = document.getElementById("error-message");
+  const closePasswordPopup = document.getElementById("close-password-popup");
 
-  const allTracks = Array.from("abcdefghijklmnopqrstuvwxyz").slice(0, 24);
-  const todayKey = new Date().toISOString().slice(0, 10);
-  const trackKey = `played-song-${todayKey}`;
+  const phraseDisplay = document.getElementById("phrase-display");
+  const phraseText = document.getElementById("phrase-text");
 
-  function pickSong() {
-    const stored = localStorage.getItem(trackKey);
-    if (stored) return `music/${stored}.mp4`;
-    const random = allTracks[Math.floor(Math.random() * allTracks.length)];
-    localStorage.setItem(trackKey, random);
-    return `music/${random}.mp4`;
-  }
-
-  audio.src = pickSong();
-
-  playBtn.addEventListener("click", () => {
-    audio.paused ? audio.play() : audio.pause();
-  });
-
-  audio.addEventListener("play", () => {
-    playIcon.textContent = "❚❚";
-  });
-
-  audio.addEventListener("pause", () => {
-    playIcon.textContent = "▶";
-  });
-
-  audio.addEventListener("timeupdate", () => {
-    progressBar.value = audio.currentTime;
-    progressBar.max = audio.duration;
-    currentTimeEl.textContent = formatTime(audio.currentTime);
-    durationEl.textContent = formatTime(audio.duration);
-  });
-
-  progressBar.addEventListener("mousedown", (e) => e.preventDefault());
-
-  function formatTime(sec) {
-    const m = Math.floor(sec / 60);
-    const s = Math.floor(sec % 60).toString().padStart(2, "0");
-    return `${m}:${s}`;
-  }
-
-  // --- Password-Protected Phrase Logic ---
   const PASSWORD = "TrustMeBabe";
   const phraseDates = [12, 14, 16, 17, 19, 20, 21, 23, 24, 29];
   const phrases = ["Oluwakemi", "Love", "Honesty", "Communication", "Ifemi", "Ayomi", "Marriage", "Eternity", "Baker", "Birthday"];
-  const today = new Date().getDate();
+  const currentDay = new Date().getDate();
 
-  audio.addEventListener("ended", () => {
-    document.getElementById("password-popup").classList.remove("hidden");
-    document.getElementById("password-input").value = "";
-    document.getElementById("error-message").classList.add("hidden");
-  });
-
-  document.getElementById("submit-password").addEventListener("click", () => {
-    const input = document.getElementById("password-input").value.trim();
+  submitBtn.addEventListener("click", () => {
+    const input = passwordInput.value.trim();
     if (input === PASSWORD) {
-      const msg = phraseDates.includes(today)
-        ? phrases[phraseDates.indexOf(today)]
-        : "Sorry my love, no phrase today. Check back tomorrow.";
-      document.getElementById("phrase-text").textContent = msg;
-      document.getElementById("password-popup").classList.add("hidden");
-      document.getElementById("phrase-display").classList.remove("hidden");
+      if (phraseDates.includes(currentDay)) {
+        phraseText.textContent = phrases[phraseDates.indexOf(currentDay)];
+      } else {
+        phraseText.textContent = "Sorry my love, no phrase today. Check back tomorrow.";
+      }
+      passwordPopup.classList.add("hidden");
+      phraseDisplay.classList.remove("hidden");
     } else {
-      document.getElementById("error-message").textContent = "You entered the wrong password my love.";
-      document.getElementById("error-message").classList.remove("hidden");
+      errorMsg.textContent = "You entered the wrong password my love.";
+      errorMsg.classList.remove("hidden");
     }
   });
 
-  document.getElementById("close-password-popup").addEventListener("click", () => {
-    document.getElementById("password-popup").classList.add("hidden");
+  closePasswordPopup.addEventListener("click", () => {
+    passwordPopup.classList.add("hidden");
   });
 });
