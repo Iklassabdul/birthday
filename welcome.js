@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("seconds").textContent = String(s).padStart(2, "0");
   }, 1000);
 
-  // ========== Title Rotator ==========
+  // ========== Rotating Titles ==========
   const messages = [
     "Something beautiful is brewing for the one who makes me smile.",
     "My woman, my everything, your surprise is almost ready.",
@@ -46,83 +46,82 @@ document.addEventListener("DOMContentLoaded", function () {
   const birthdayDeadline = new Date("2025-05-31T00:00:00+01:00").getTime();
   const now = new Date().getTime();
 
+  const audioPlayer = document.querySelector(".simple-audio-player");
+  const giftHeading = document.getElementById("gift-heading");
+
   if (now >= birthdayDeadline) {
-    document.querySelector(".simple-audio-player").classList.add("hidden");
-    document.getElementById("gift-heading").textContent = "Happy Birthday Oluwakemi!";
-    return; // Stop all actions if after birthday
-  }
+    if (audioPlayer) audioPlayer.classList.add("hidden");
+    if (giftHeading) giftHeading.textContent = "Happy Birthday Oluwakemi!";
+  } else {
+    const audio = document.getElementById("audio");
+    const playBtn = document.getElementById("play-button");
+    const playIcon = document.getElementById("play-icon");
+    const progress = document.getElementById("progress-bar");
+    const currentTimeEl = document.getElementById("current-time");
+    const durationEl = document.getElementById("duration");
 
-  const audio = document.getElementById("audio");
-  const playBtn = document.getElementById("play-button");
-  const playIcon = document.getElementById("play-icon");
-  const progress = document.getElementById("progress-bar");
-  const currentTimeEl = document.getElementById("current-time");
-  const durationEl = document.getElementById("duration");
+    const allTracks = Array.from("abcdefghijklmnopqrstuvwxyz");
+    const todayKey = new Date().toISOString().slice(0, 10);
+    const playedTodayKey = `played-song-${todayKey}`;
 
-  const allTracks = Array.from("abcdefghijklmnopqrstuvwxyz");
-  const todayKey = new Date().toISOString().slice(0, 10);
-  const playedTodayKey = `played-song-${todayKey}`;
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith("played-song-") && key !== playedTodayKey) {
+        localStorage.removeItem(key);
+      }
+    });
 
-  // Optional Cleanup of Old Days
-  Object.keys(localStorage).forEach(key => {
-    if (key.startsWith("played-song-") && key !== playedTodayKey) {
-      localStorage.removeItem(key);
+    function pickSongForToday() {
+      let alreadyPlayed = localStorage.getItem(playedTodayKey);
+      if (alreadyPlayed) return `audio/${alreadyPlayed}.mp3`;
+      const random = allTracks[Math.floor(Math.random() * allTracks.length)];
+      localStorage.setItem(playedTodayKey, random);
+      return `audio/${random}.mp3`;
     }
-  });
 
-  function pickSongForToday() {
-    let alreadyPlayed = localStorage.getItem(playedTodayKey);
-    if (alreadyPlayed) return `audio/${alreadyPlayed}.mp3`;
+    const todayTrack = pickSongForToday();
+    audio.src = todayTrack;
 
-    const random = allTracks[Math.floor(Math.random() * allTracks.length)];
-    localStorage.setItem(playedTodayKey, random);
-    return `audio/${random}.mp3`;
+    let isPlaying = false;
+
+    playBtn.addEventListener("click", () => {
+      isPlaying ? audio.pause() : audio.play();
+    });
+
+    audio.addEventListener("play", () => {
+      isPlaying = true;
+      playIcon.innerHTML = "&#10074;&#10074;";
+    });
+
+    audio.addEventListener("pause", () => {
+      isPlaying = false;
+      playIcon.innerHTML = "&#9658;";
+    });
+
+    audio.addEventListener("timeupdate", () => {
+      progress.value = audio.currentTime;
+      progress.max = audio.duration;
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+      durationEl.textContent = formatTime(audio.duration);
+    });
+
+    function formatTime(seconds) {
+      const min = Math.floor(seconds / 60);
+      const sec = Math.floor(seconds % 60).toString().padStart(2, "0");
+      return `${min}:${sec}`;
+    }
+
+    progress.addEventListener("mousedown", e => e.preventDefault());
+
+    audio.addEventListener("ended", () => {
+      isPlaying = false;
+      playIcon.innerHTML = "&#9658;";
+      document.getElementById("password-popup").classList.remove("hidden");
+      document.getElementById("password-input").value = "";
+      document.getElementById("error-message").classList.add("hidden");
+    });
   }
-
-  const todayTrack = pickSongForToday();
-  audio.src = todayTrack;
-
-  let isPlaying = false;
-
-  playBtn.addEventListener("click", () => {
-    isPlaying ? audio.pause() : audio.play();
-  });
-
-  audio.addEventListener("play", () => {
-    isPlaying = true;
-    playIcon.innerHTML = "&#10074;&#10074;";
-  });
-
-  audio.addEventListener("pause", () => {
-    isPlaying = false;
-    playIcon.innerHTML = "&#9658;";
-  });
-
-  audio.addEventListener("timeupdate", () => {
-    progress.value = audio.currentTime;
-    progress.max = audio.duration;
-    currentTimeEl.textContent = formatTime(audio.currentTime);
-    durationEl.textContent = formatTime(audio.duration);
-  });
-
-  function formatTime(seconds) {
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60).toString().padStart(2, "0");
-    return `${min}:${sec}`;
-  }
-
-  progress.addEventListener("mousedown", e => e.preventDefault());
-
-  audio.addEventListener("ended", () => {
-    isPlaying = false;
-    playIcon.innerHTML = "&#9658;";
-    document.getElementById("password-popup").classList.remove("hidden");
-    document.getElementById("password-input").value = "";
-    document.getElementById("error-message").classList.add("hidden");
-  });
 
   // ========== Gift Popup ==========
-  const giftHeading = document.getElementById("gift-heading");
   const giftPopup = document.getElementById("gift-popup");
   const popupText = document.getElementById("popup-text");
   const giftLines = [
