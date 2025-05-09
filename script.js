@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Countdown Timer
+  // ========== Countdown Timer ==========
   const targetDate = new Date("2025-05-31T00:00:00+01:00").getTime();
   setInterval(() => {
     const now = new Date().getTime();
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("seconds").textContent = String(s).padStart(2, "0");
   }, 1000);
 
-  // Rotating Title Messages
+  // ========== Title Rotator ==========
   const messages = [
     "Something beautiful is brewing for the one who makes me smile.",
     "My woman, my everything, your surprise is almost ready.",
@@ -42,7 +42,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }, 300);
   }, 5000);
 
-  // Audio Logic
+  // ========== Audio Logic ==========
+  const birthdayDeadline = new Date("2025-05-31T00:00:00+01:00").getTime();
+  const now = new Date().getTime();
+
+  if (now >= birthdayDeadline) {
+    document.querySelector(".simple-audio-player").classList.add("hidden");
+    document.getElementById("gift-heading").textContent = "Happy Birthday Oluwakemi!";
+    return; // Stop all actions if after birthday
+  }
+
   const audio = document.getElementById("audio");
   const playBtn = document.getElementById("play-button");
   const playIcon = document.getElementById("play-icon");
@@ -50,34 +59,30 @@ document.addEventListener("DOMContentLoaded", function () {
   const currentTimeEl = document.getElementById("current-time");
   const durationEl = document.getElementById("duration");
 
-  let isPlaying = false;
-
+  const allTracks = Array.from("abcdefghijklmnopqrstuvwxyz");
   const todayKey = new Date().toISOString().slice(0, 10);
   const playedTodayKey = `played-song-${todayKey}`;
-  const allTracks = ["a", "b"];
+
+  // Optional Cleanup of Old Days
+  Object.keys(localStorage).forEach(key => {
+    if (key.startsWith("played-song-") && key !== playedTodayKey) {
+      localStorage.removeItem(key);
+    }
+  });
 
   function pickSongForToday() {
-    try {
-      const stored = localStorage.getItem(playedTodayKey);
-      if (stored && allTracks.includes(stored)) {
-        return `audio/${stored}.mp3`;
-      }
-      const random = allTracks[Math.floor(Math.random() * allTracks.length)];
-      localStorage.setItem(playedTodayKey, random);
-      return `audio/${random}.mp3`;
-    } catch (err) {
-      console.error("Song pick failed, defaulting to a.mp3:", err);
-      return "audio/a.mp3";
-    }
+    let alreadyPlayed = localStorage.getItem(playedTodayKey);
+    if (alreadyPlayed) return `audio/${alreadyPlayed}.mp3`;
+
+    const random = allTracks[Math.floor(Math.random() * allTracks.length)];
+    localStorage.setItem(playedTodayKey, random);
+    return `audio/${random}.mp3`;
   }
 
   const todayTrack = pickSongForToday();
   audio.src = todayTrack;
-  audio.load();
 
-  audio.onerror = () => {
-    alert("Oops! Couldn’t load the audio file. Please make sure 'a.mp3' or 'b.mp3' exists in the 'audio/' folder.");
-  };
+  let isPlaying = false;
 
   playBtn.addEventListener("click", () => {
     isPlaying ? audio.pause() : audio.play();
@@ -100,6 +105,12 @@ document.addEventListener("DOMContentLoaded", function () {
     durationEl.textContent = formatTime(audio.duration);
   });
 
+  function formatTime(seconds) {
+    const min = Math.floor(seconds / 60);
+    const sec = Math.floor(seconds % 60).toString().padStart(2, "0");
+    return `${min}:${sec}`;
+  }
+
   progress.addEventListener("mousedown", e => e.preventDefault());
 
   audio.addEventListener("ended", () => {
@@ -110,13 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("error-message").classList.add("hidden");
   });
 
-  function formatTime(seconds) {
-    const min = Math.floor(seconds / 60);
-    const sec = Math.floor(seconds % 60).toString().padStart(2, "0");
-    return `${min}:${sec}`;
-  }
-
-  // Gift Popup
+  // ========== Gift Popup ==========
   const giftHeading = document.getElementById("gift-heading");
   const giftPopup = document.getElementById("gift-popup");
   const popupText = document.getElementById("popup-text");
@@ -138,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
     giftPopup.classList.add("hidden");
   });
 
-  // Password Phrase Unlock
+  // ========== Phrase Unlock ==========
   const passwordPopup = document.getElementById("password-popup");
   const passwordInput = document.getElementById("password-input");
   const submitBtn = document.getElementById("submit-password");
