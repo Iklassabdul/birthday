@@ -1,20 +1,29 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // ========== Countdown Timer ==========
-  const targetDate = new Date("2025-05-31T00:00:00+01:00").getTime();
-  setInterval(() => {
-    const now = new Date().getTime();
-    const diff = targetDate - now;
-    const d = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
-    const h = Math.max(0, Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
-    const m = Math.max(0, Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)));
-    const s = Math.max(0, Math.floor((diff % (1000 * 60)) / 1000));
-    document.getElementById("days").textContent = String(d).padStart(2, "0");
-    document.getElementById("hours").textContent = String(h).padStart(2, "0");
-    document.getElementById("minutes").textContent = String(m).padStart(2, "0");
-    document.getElementById("seconds").textContent = String(s).padStart(2, "0");
-  }, 1000);
+  // ========== Welcome Screen ==========
+  const welcomeMessages = [
+    "System status: Waiting for Oluwakemi’s birthday...\nProgrammed with love, patience, and a little surprise.",
+    "Before anything else, just know, this page is love in digital form.\nCount it down with me.",
+    "Every sunrise brings us closer.\nThis countdown? It’s my silent way of saying “I’m thinking of you.”",
+    "Some people write letters. I build webpages.\nAnd this one? It’s all for you.",
+    "Hey beautiful,\nI didn’t just build a page... I planted a surprise that blooms on your birthday.",
+    "You may not see the effort...\nBut every second behind this was for one thing. Making your birthday feel a little more special, Oluwakemi.",
+    "Oluwakemi,\nThey say love is shown in little things.\nSo here’s a page, counting down to a day that means everything to me.",
+    "Oluwakemi,\nI coded a surprise into the future.\nKeep checking... it’s going to be sweet.",
+    "Some gifts come wrapped in ribbons,\nOthers in intention.\nThis one is wrapped in code, crafted for you, Oluwakemi.",
+    "This isn’t just a countdown...\nIt’s my way of showing how much I care.\nBuilt with love just for you."
+  ];
+  const welcomeScreen = document.getElementById("welcome-screen");
+  const welcomeMessage = document.getElementById("welcome-message");
+  if (welcomeScreen && welcomeMessage) {
+    const selected = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
+    welcomeMessage.textContent = selected;
+    setTimeout(() => {
+      welcomeScreen.style.opacity = 0;
+      setTimeout(() => welcomeScreen.style.display = "none", 500);
+    }, 8000);
+  }
 
-  // ========== Title Rotator ==========
+  // ========== Title Rotation ==========
   const messages = [
     "Something beautiful is brewing for the one who makes me smile.",
     "My woman, my everything, your surprise is almost ready.",
@@ -33,54 +42,56 @@ document.addEventListener("DOMContentLoaded", function () {
   ];
   const titleEl = document.getElementById("rotating-title");
   let msgIndex = 0;
-  setInterval(() => {
+
+  const updateTitle = () => {
     titleEl.style.opacity = 0;
     setTimeout(() => {
       titleEl.textContent = messages[msgIndex];
       titleEl.style.opacity = 1;
       msgIndex = (msgIndex + 1) % messages.length;
     }, 300);
-  }, 5000);
+  };
+  const titleInterval = setInterval(updateTitle, 5000);
 
-  // ========== Audio Logic ==========
-  const birthdayDeadline = new Date("2025-05-31T00:00:00+01:00").getTime();
-  const now = new Date().getTime();
+  // ========== Countdown Timer + 12AM Reveal ==========
+  const countdown = document.getElementById("countdown");
+  const birthdayMessage = document.getElementById("birthday-message");
+  const targetMidnight = new Date("2025-05-31T00:00:00+01:00").getTime();
 
-  if (now >= birthdayDeadline) {
-    document.querySelector(".simple-audio-player").classList.add("hidden");
-    document.getElementById("gift-heading").textContent = "Happy Birthday Oluwakemi!";
-    return; // Stop all actions if after birthday
-  }
+  const countdownTimer = setInterval(() => {
+    const now = new Date().getTime();
+    const distance = targetMidnight - now;
 
+    if (distance <= 0) {
+      clearInterval(countdownTimer);
+      countdown.classList.add("hidden");
+      birthdayMessage.classList.remove("hidden");
+      titleEl.textContent = "The moment is here, my love.";
+      clearInterval(titleInterval);
+      return;
+    }
+
+    const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const s = Math.floor((distance % (1000 * 60)) / 1000);
+    document.getElementById("days").textContent = String(d).padStart(2, "0");
+    document.getElementById("hours").textContent = String(h).padStart(2, "0");
+    document.getElementById("minutes").textContent = String(m).padStart(2, "0");
+    document.getElementById("seconds").textContent = String(s).padStart(2, "0");
+  }, 1000);
+
+  // ========== Audio ==========
   const audio = document.getElementById("audio");
+  const letters = "abcdefghijklmnopqrstuvwxyz".split("");
+  const randomLetter = letters[Math.floor(Math.random() * letters.length)];
+  audio.src = `audio/${randomLetter}.mp3`;
+
   const playBtn = document.getElementById("play-button");
   const playIcon = document.getElementById("play-icon");
   const progress = document.getElementById("progress-bar");
   const currentTimeEl = document.getElementById("current-time");
   const durationEl = document.getElementById("duration");
-
-  const allTracks = Array.from("abcdefghijklmnopqrstuvwxyz");
-  const todayKey = new Date().toISOString().slice(0, 10);
-  const playedTodayKey = `played-song-${todayKey}`;
-
-  // Optional Cleanup of Old Days
-  Object.keys(localStorage).forEach(key => {
-    if (key.startsWith("played-song-") && key !== playedTodayKey) {
-      localStorage.removeItem(key);
-    }
-  });
-
-  function pickSongForToday() {
-    let alreadyPlayed = localStorage.getItem(playedTodayKey);
-    if (alreadyPlayed) return `audio/${alreadyPlayed}.mp3`;
-
-    const random = allTracks[Math.floor(Math.random() * allTracks.length)];
-    localStorage.setItem(playedTodayKey, random);
-    return `audio/${random}.mp3`;
-  }
-
-  const todayTrack = pickSongForToday();
-  audio.src = todayTrack;
 
   let isPlaying = false;
 
@@ -121,29 +132,45 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("error-message").classList.add("hidden");
   });
 
-  // ========== Gift Popup ==========
+  // ========== Gift Unlock Logic ==========
   const giftHeading = document.getElementById("gift-heading");
   const giftPopup = document.getElementById("gift-popup");
   const popupText = document.getElementById("popup-text");
-  const giftLines = [
-    "A queen like you deserves to wait for a royal reveal. Patience, my love.",
-    "Hmm… you too dey rush. Let’s unwrap it together on the 31st.",
-    "Chill babygirl… we still dey cook your surprise. Come back on the 31st."
-  ];
-  let popupIndex = 0;
+
+  const unlockTime = new Date("2025-05-31T12:00:00+01:00").getTime();
+  const correctPhrase = "Oluwakemi Loving You Brings Me Peace Joy Strength And Purpose";
+
+  let isGiftUnlocked = false;
 
   giftHeading.addEventListener("click", () => {
-    popupText.textContent = giftLines[popupIndex % giftLines.length];
-    popupIndex++;
-    giftPopup.classList.remove("hidden");
-    setTimeout(() => giftPopup.classList.add("hidden"), 5000);
+    const now = new Date().getTime();
+
+    if (now >= unlockTime) {
+      // Show password input popup for full phrase
+      const input = prompt("Enter the full 10-word phrase to unlock your gift:");
+      if (input && input.trim() === correctPhrase) {
+        window.location.href = "gift.html";
+      } else {
+        alert("Hmm… that’s not the full phrase, my love. Try again.");
+      }
+    } else {
+      // Still before unlock time: show rotating tease
+      const lines = [
+        "A queen like you deserves to wait for a royal reveal. Patience, my love.",
+        "Hmm… you too dey rush. Let’s unwrap it together on the 31st.",
+        "Chill babygirl… we still dey cook your surprise. Come back on the 31st."
+      ];
+      popupText.textContent = lines[Math.floor(Math.random() * lines.length)];
+      giftPopup.classList.remove("hidden");
+      setTimeout(() => giftPopup.classList.add("hidden"), 5000);
+    }
   });
 
   document.getElementById("close-popup").addEventListener("click", () => {
     giftPopup.classList.add("hidden");
   });
 
-  // ========== Phrase Unlock ==========
+  // ========== Phrase Unlock ========== (optional, still active)
   const passwordPopup = document.getElementById("password-popup");
   const passwordInput = document.getElementById("password-input");
   const submitBtn = document.getElementById("submit-password");
@@ -154,8 +181,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const phraseText = document.getElementById("phrase-text");
 
   const PASSWORD = "TrustMeBabe";
-  const phraseDates = [12, 14, 16, 17, 19, 20, 21, 23, 24, 29];
-  const phrases = ["Oluwakemi", "Love", "Honesty", "Communication", "Ifemi", "Ayomi", "Marriage", "Eternity", "Baker", "Birthday"];
+  const phraseDates = [10, 14, 16, 17, 19, 20, 21, 23, 24, 29];
+  const phrases = ["Oluwakemi", "Loving", "You", "Brings", "Me", "Peace", "Joy", "Strength", "And", "Purpose"];
   const currentDay = new Date().getDate();
 
   submitBtn.addEventListener("click", () => {

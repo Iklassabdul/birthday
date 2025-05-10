@@ -2,21 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Birthday Surprise</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="welcome.css" />
+
+  <!-- Fonts and Styles -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="welcome.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Welcome Overlay -->
-  <div id="welcome-screen" class="welcome-hidden">
+  <!-- Welcome Screen -->
+  <div id="welcome-screen">
     <div class="welcome-message" id="welcome-message">
-      <!-- This message is injected dynamically -->
+      <!-- Message injected via JS -->
     </div>
   </div>
 
+  <!-- Main Content -->
   <div class="container">
     <h1 id="rotating-title">Hey love, something special is coming…</h1>
 
@@ -32,8 +35,20 @@
       <div><span id="seconds">00</span><small>Seconds</small></div>
     </div>
 
+    <!-- Hidden message on May 31 -->
+    <div id="birthday-message" class="hidden">
+      <p class="birthday-text">
+        Happy birthday, my love.<br />
+        May Allah bless you with long life, joy, mercy, and unshakable peace.<br />
+        You are a light in my life, and I pray the world reflects the love you give.<br />
+        Thank you for existing.<br />
+        I love you deeply, endlessly, sincerely.
+      </p>
+    </div>
+
     <h2 id="gift-heading" class="gift-heading">Click here to unwrap your gift, my love</h2>
 
+    <!-- Audio Player -->
     <div class="simple-audio-player">
       <button id="play-button" class="play-btn">
         <span id="play-icon">&#9658;</span>
@@ -46,6 +61,7 @@
       <audio id="audio" preload="auto" type="audio/mp3"></audio>
     </div>
 
+    <!-- Phrase Display -->
     <div id="phrase-display" class="hidden">
       <h3 id="phrase-text">Your phrase will appear here</h3>
     </div>
@@ -66,6 +82,7 @@
     <div id="error-message" class="hidden"></div>
   </div>
 
+  <!-- Scripts -->
   <script src="welcome.js"></script>
   <script src="script.js"></script>
 </body>
